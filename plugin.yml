@@ -1,0 +1,20 @@
+name: WorldTimer
+main: org.fatecrafters.plugins.WorldTime
+version: 1.0
+author: Slayr288
+website: http://Fatecrafters.org
+description: Set time limits in a world.
+commands:
+  worldtimer:
+    description: Main commands.
+    usage: /wt help
+    aliases: [wt]
+permissions:
+  worldtimer.*:
+    description: All permissions.
+    children:
+      worldtimer.reload: true
+      worldtimer.addtime: true
+      worldtimer.remtime: true    
+  worldtimer.reload:
+    default: op

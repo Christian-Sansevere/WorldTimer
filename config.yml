@@ -1,0 +1,16 @@
+#Times are in seconds. Enter 0 in the cooldown to disable.
+checkIfExpiredEvery: 5
+
+Worlds:
+  world:
+    timer: 900
+    cooldown: 86400
+    locationOnExpire:
+      world: my_spawn_world
+      x: 100.5
+      y: 64
+      z: 152
+    timerAddedMessage: '&aYou have 15 minutes to be in this world. You will be kicked out when this time is up.'
+    returnMessage: '&aYou have $time minutes left in this world until you will be kicked out.'
+    timerExpiredMessage: '&cYou have been kicked out of this world since your timer has expired.'
+    onCooldownMessage: '&6You can not go to this world since you are on a cooldown. You have $cooldown minutes remaining.'
