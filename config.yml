@@ -4,6 +4,7 @@ checkIfExpiredEvery: 5
 Worlds:
   world:
     timer: 900
+    continueCooldownOnLogout: true
     cooldown: 86400
     locationOnExpire:
       world: my_spawn_world
