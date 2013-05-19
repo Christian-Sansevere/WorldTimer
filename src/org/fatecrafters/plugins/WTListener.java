@@ -32,7 +32,7 @@ public class WTListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-	public void onPlayerTeleportEvent(PlayerPortalEvent e) {
+	public void onPlayerPortalEvent(PlayerPortalEvent e) {
 		String toWorld = e.getTo().getWorld().getName();
 		Player p = e.getPlayer();
 		if (!p.hasPermission("worldtimer."+toWorld+".bypass")) {
