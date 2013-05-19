@@ -22,6 +22,7 @@ public class WorldTime extends JavaPlugin {
 		WTUtil.readData("data.yml", WTUtil.data);
 		WTUtil.readData("cooldowns.yml", WTUtil.cooldowns);
 		WTUtil.readData("timestamps.yml", WTUtil.timestamps);
+		WTUtil.readData("cooldownTimestamps.yml", WTUtil.cooldownTimestamps);
 		saveDefaultConfig();
 		getServer().getPluginManager().registerEvents(new WTListener(), this);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -40,6 +41,7 @@ public class WorldTime extends JavaPlugin {
 		WTUtil.writeData("data.yml", WTUtil.data);
 		WTUtil.writeData("cooldowns.yml", WTUtil.cooldowns);
 		WTUtil.writeData("timestamps.yml", WTUtil.timestamps);
+		WTUtil.writeData("cooldownTimestamps.yml", WTUtil.cooldownTimestamps);
 		getServer().getPluginManager().disablePlugin(this);
 		getLogger().info("[WorldTime] WorldTime has been disabled.");
 	}

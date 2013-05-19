@@ -22,6 +22,7 @@ public class WTUtil {
 	public static HashMap<String,Long> data = new HashMap<String, Long>();
 	public static HashMap<String,Long> cooldowns = new HashMap<String, Long>();
 	public static HashMap<String,Long> timestamps = new HashMap<String, Long>();
+	public static HashMap<String,Long> cooldownTimestamps = new HashMap<String, Long>();
 	public static HashMap<String,Boolean> inEnabledWorld = new HashMap<String, Boolean>();
 
 	private static WorldTime plugin;
@@ -68,6 +69,15 @@ public class WTUtil {
 		for (String world : ConfigWorlds) {
 			Long timer = WTUtil.data.get(playerName+":"+world);
 			Long timestamp = WTUtil.timestamps.get(playerName+":"+world);
+			if (!plugin.getConfig().getBoolean("Worlds."+world+".continueCooldownOnLogout")) {
+				Long cooldown = WTUtil.cooldowns.get(playerName+":"+world);
+				if (cooldown != null && cooldown > System.currentTimeMillis()) {
+					WTUtil.cooldownTimestamps.put(playerName+":"+world, cooldown - System.currentTimeMillis());
+					WTUtil.cooldowns.remove(playerName+":"+world);
+				} else {
+					WTUtil.cooldowns.remove(playerName+":"+world);
+				}
+			}
 			if (timer != null && WTUtil.inEnabledWorld.get(playerName).booleanValue() && timer > System.currentTimeMillis()) {
 				WTUtil.timestamps.put(playerName+":"+world, timer - System.currentTimeMillis());
 				WTUtil.data.remove(playerName+":"+world);
@@ -88,6 +98,12 @@ public class WTUtil {
 			if (timestamp != null) {
 				WTUtil.data.put(playerName+":"+world, System.currentTimeMillis() + timestamp);
 				WTUtil.timestamps.remove(playerName+":"+world);
+			}
+			if (!plugin.getConfig().getBoolean("Worlds."+world+".continueCooldownOnLogout")) {
+				Long cooldownTimestamp = WTUtil.cooldownTimestamps.get(playerName+":"+world);
+				if (cooldownTimestamp != null) {
+					WTUtil.cooldownTimestamps.put(playerName+":"+world, cooldownTimestamp + System.currentTimeMillis());
+				}
 			}
 		}
 	}
