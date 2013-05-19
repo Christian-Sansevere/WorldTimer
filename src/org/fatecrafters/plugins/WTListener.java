@@ -58,7 +58,7 @@ public class WTListener implements Listener {
 					WTUtil.data.put(p+":"+world, (System.currentTimeMillis() + timestamp));
 					WTUtil.inEnabledWorld.put(p, true);
 					player.sendMessage(ChatColor.translateAlternateColorCodes('&', WTUtil.getConfig().getString("Worlds."+world+".returnMessage").replace("$time", ""+((WTUtil.data.get(p+":"+world) - System.currentTimeMillis()) / 1000 / 60))));
-				} else  {
+				} else {
 					WTUtil.data.put(p+":"+world, System.currentTimeMillis() + WTUtil.getConfig().getLong("Worlds."+world+".timer")*1000);
 					WTUtil.inEnabledWorld.put(p, true);
 					player.sendMessage(ChatColor.translateAlternateColorCodes('&', WTUtil.getConfig().getString("Worlds."+world+".timerAddedMessage")));

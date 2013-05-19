@@ -68,7 +68,7 @@ public class WTUtil {
 		for (String world : ConfigWorlds) {
 			Long timer = WTUtil.data.get(playerName+":"+world);
 			Long timestamp = WTUtil.timestamps.get(playerName+":"+world);
-			if (timer != null && WTUtil.inEnabledWorld.get(playerName).booleanValue()) {
+			if (timer != null && WTUtil.inEnabledWorld.get(playerName).booleanValue() && timer > System.currentTimeMillis()) {
 				WTUtil.timestamps.put(playerName+":"+world, timer - System.currentTimeMillis());
 				WTUtil.data.remove(playerName+":"+world);
 			} else if (timestamp != null && !WTUtil.inEnabledWorld.get(playerName).booleanValue()) {
