@@ -104,19 +104,21 @@ public class WTUtil {
 
 	public static void taskCheck(Player p) {
 		String name = p.getName();
-		if (WTUtil.inEnabledWorld.get(name).booleanValue()) {
-			String worldname = p.getWorld().getName();
-			Long timer = WTUtil.data.get(name+":"+worldname);
-			if (timer != null) {
-				if (System.currentTimeMillis() >= timer) {
-					WTUtil.data.remove(name+":"+worldname);
-					if (WTUtil.getConfig().getInt("Worlds."+worldname+".cooldown") > 0) {
-						WTUtil.cooldowns.put(name+":"+worldname, System.currentTimeMillis() + getConfig().getLong("Worlds."+worldname+".cooldown")*1000);
+		if (!p.hasPermission("worldtimer.bypass")) {
+			if (WTUtil.inEnabledWorld.get(name).booleanValue()) {
+				String worldname = p.getWorld().getName();
+				Long timer = WTUtil.data.get(name+":"+worldname);
+				if (timer != null) {
+					if (System.currentTimeMillis() >= timer) {
+						WTUtil.data.remove(name+":"+worldname);
+						if (WTUtil.getConfig().getInt("Worlds."+worldname+".cooldown") > 0) {
+							WTUtil.cooldowns.put(name+":"+worldname, System.currentTimeMillis() + getConfig().getLong("Worlds."+worldname+".cooldown")*1000);
+						}
+						p.teleport(new Location(plugin.getServer().getWorld(getConfig().getString("Worlds."+worldname+".locationOnExpire."+"world")), getConfig().getDouble("Worlds."+worldname+".locationOnExpire."+"x"),
+								getConfig().getDouble("Worlds."+worldname+".locationOnExpire."+"y"), getConfig().getDouble("Worlds."+worldname+".locationOnExpire."+"z")));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Worlds."+worldname+".timerExpiredMessage")));
+						WTUtil.timestamps.remove(name+":"+worldname);
 					}
-					p.teleport(new Location(plugin.getServer().getWorld(getConfig().getString("Worlds."+worldname+".locationOnExpire."+"world")), getConfig().getDouble("Worlds."+worldname+".locationOnExpire."+"x"),
-							getConfig().getDouble("Worlds."+worldname+".locationOnExpire."+"y"), getConfig().getDouble("Worlds."+worldname+".locationOnExpire."+"z")));
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Worlds."+worldname+".timerExpiredMessage")));
-					WTUtil.timestamps.remove(name+":"+worldname);
 				}
 			}
 		}

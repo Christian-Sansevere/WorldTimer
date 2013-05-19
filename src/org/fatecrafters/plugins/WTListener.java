@@ -18,7 +18,7 @@ public class WTListener implements Listener {
 	public void onPlayerTeleportEvent(PlayerTeleportEvent e) {
 		World toWorld = e.getTo().getWorld();
 		Player p = e.getPlayer();
-		if (!p.hasPermission("worldtimer."+toWorld.getName()+".bypass")) {
+		if (!p.hasPermission("worldtimer.bypass")) {
 			if (WTUtil.checkIfInEnabledWorld(toWorld)) {
 				if (WTUtil.getConfig().getInt("Worlds."+toWorld.getName()+".cooldown") > 0) {
 					if (WTUtil.checkIfOnCooldown(p.getName(), toWorld)) {
@@ -35,7 +35,7 @@ public class WTListener implements Listener {
 	public void onPlayerPortalEvent(PlayerPortalEvent e) {
 		String toWorld = e.getTo().getWorld().getName();
 		Player p = e.getPlayer();
-		if (!p.hasPermission("worldtimer."+toWorld+".bypass")) {
+		if (!p.hasPermission("worldtimer.bypass")) {
 			if (WTUtil.checkIfInEnabledWorld(p.getWorld())) {
 				if (WTUtil.checkIfOnCooldown(p.getName(), p.getWorld())) {
 					String cooldownmsg = WTUtil.getConfig().getString("Worlds."+toWorld+".onCooldownMessage").replace("$cooldown", ""+((WTUtil.cooldowns.get(p.getName()+":"+toWorld) - System.currentTimeMillis()) / 1000 / 60));
@@ -51,7 +51,7 @@ public class WTListener implements Listener {
 		Player player = e.getPlayer();
 		String p = player.getName();
 		String world = player.getWorld().getName();
-		if (!player.hasPermission("worldtimer."+world+".bypass")) {
+		if (!player.hasPermission("worldtimer.bypass")) {
 			if (WTUtil.checkIfInEnabledWorld(player.getWorld())) {
 				Long timestamp = WTUtil.timestamps.get(p+":"+world);
 				if (timestamp != null) {
@@ -73,16 +73,18 @@ public class WTListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onLogOut(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
-		WTUtil.logoutTimestamp(p.getName());
-		WTUtil.inEnabledWorld.remove(p.getName());
+		if (!p.hasPermission("worldtimer.bypass")) {
+			WTUtil.logoutTimestamp(p.getName());
+			WTUtil.inEnabledWorld.remove(p.getName());
+		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		World world = p.getWorld();
-		WTUtil.loginTimestamp(p.getName());
-		if (!p.hasPermission("worldtimer."+world.getName()+".bypass")) {
+		if (!p.hasPermission("worldtimer.bypass")) {
+			WTUtil.loginTimestamp(p.getName());
 			if (WTUtil.checkIfInEnabledWorld(world)) {
 				if (WTUtil.data.get(p.getName()+":"+world.getName()) == null) {
 					WTUtil.data.put(p.getName()+":"+world.getName(), System.currentTimeMillis() + WTUtil.getConfig().getLong("Worlds."+world.getName()+".timer")*1000);
