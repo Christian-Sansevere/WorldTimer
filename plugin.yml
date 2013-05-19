@@ -12,9 +12,11 @@ commands:
 permissions:
   worldtimer.*:
     description: All permissions.
+    default: false
     children:
       worldtimer.reload: true
-      worldtimer.addtime: true
-      worldtimer.remtime: true    
+      worldtimer.bypass: true 
   worldtimer.reload:
     default: op
+  worldtimer.bypass:
+    default: false

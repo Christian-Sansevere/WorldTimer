@@ -77,10 +77,10 @@ public class WTUtil {
 					WTUtil.cooldowns.remove(playerName+":"+world);
 				}
 			}
-			if (timer != null && WTUtil.inEnabledWorld.get(playerName).booleanValue() && timer > System.currentTimeMillis()) {
+			if (timer != null && timer > System.currentTimeMillis()) {
 				WTUtil.timestamps.put(playerName+":"+world, timer - System.currentTimeMillis());
 				WTUtil.data.remove(playerName+":"+world);
-			} else if (timestamp != null && !WTUtil.inEnabledWorld.get(playerName).booleanValue()) {
+			} else if (timestamp != null) {
 				WTUtil.timestamps.put(playerName+":"+world, timestamp);
 				WTUtil.data.remove(playerName+":"+world);	
 			} else {
@@ -98,11 +98,10 @@ public class WTUtil {
 				WTUtil.data.put(playerName+":"+world, System.currentTimeMillis() + timestamp);
 				WTUtil.timestamps.remove(playerName+":"+world);
 			}
-			if (!plugin.getConfig().getBoolean("Worlds."+world+".continueCooldownOnLogout")) {
-				Long cooldownTimestamp = WTUtil.cooldownTimestamps.get(playerName+":"+world);
-				if (cooldownTimestamp != null) {
-					WTUtil.cooldownTimestamps.put(playerName+":"+world, cooldownTimestamp + System.currentTimeMillis());
-				}
+			Long cooldownTimestamp = WTUtil.cooldownTimestamps.get(playerName+":"+world);
+			if (cooldownTimestamp != null) {
+				WTUtil.cooldowns.put(playerName+":"+world, cooldownTimestamp + System.currentTimeMillis());
+				WTUtil.cooldownTimestamps.remove(playerName+":"+world);
 			}
 		}
 	}
