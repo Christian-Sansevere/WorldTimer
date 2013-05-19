@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -34,18 +33,18 @@ public class WTUtil {
 	}
 
 
-	public static boolean checkIfInEnabledWorld(World w) {
+	public static boolean checkIfInEnabledWorld(String w) {
 		Collection<String> ConfigWorlds = plugin.getConfig().getConfigurationSection("Worlds").getKeys(false);
 		for (String world : ConfigWorlds) {
-			if (w.getName().equalsIgnoreCase(world)) {
+			if (w.equalsIgnoreCase(world)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public static boolean checkIfExpired(String playerName, World world) {
-		Long timer = WTUtil.data.get(playerName+":"+world.getName());
+	public static boolean checkIfExpired(String playerName, String world) {
+		Long timer = WTUtil.data.get(playerName+":"+world);
 		if (timer == null) {
 			return false;
 		} else if (System.currentTimeMillis() >= timer) {
@@ -54,8 +53,8 @@ public class WTUtil {
 		return false;
 	}
 
-	public static boolean checkIfOnCooldown(String playerName, World world) {
-		Long cooldown = WTUtil.cooldowns.get(playerName+":"+world.getName());
+	public static boolean checkIfOnCooldown(String playerName, String world) {
+		Long cooldown = WTUtil.cooldowns.get(playerName+":"+world);
 		if (cooldown == null) {
 			return false;
 		} else if (System.currentTimeMillis() < cooldown) {

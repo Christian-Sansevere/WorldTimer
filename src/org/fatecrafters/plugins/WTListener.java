@@ -1,7 +1,6 @@
 package org.fatecrafters.plugins;
 
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,15 +15,17 @@ public class WTListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerTeleportEvent(PlayerTeleportEvent e) {
-		World toWorld = e.getTo().getWorld();
-		Player p = e.getPlayer();
-		if (!p.hasPermission("worldtimer.bypass")) {
+		String toWorld = e.getTo().getWorld().getName();
+		String p = e.getPlayer().getName();
+		if (!e.getPlayer().hasPermission("worldtimer.bypass")) {
 			if (WTUtil.checkIfInEnabledWorld(toWorld)) {
-				if (WTUtil.getConfig().getInt("Worlds."+toWorld.getName()+".cooldown") > 0) {
-					if (WTUtil.checkIfOnCooldown(p.getName(), toWorld)) {
-						String cooldownmsg = WTUtil.getConfig().getString("Worlds."+toWorld.getName()+".onCooldownMessage").replace("$cooldown", ""+((WTUtil.cooldowns.get(p.getName()+":"+toWorld.getName()) - System.currentTimeMillis()) / 1000 / 60));
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', cooldownmsg));
+				if (WTUtil.getConfig().getInt("Worlds."+toWorld+".cooldown") > 0) {
+					if (WTUtil.checkIfOnCooldown(p, toWorld)) {
+						String cooldownmsg = WTUtil.getConfig().getString("Worlds."+toWorld+".onCooldownMessage").replace("$cooldown", ""+((WTUtil.cooldowns.get(p+":"+toWorld) - System.currentTimeMillis()) / 1000 / 60));
+						e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', cooldownmsg));
 						e.setCancelled(true);
+					} else if (WTUtil.cooldowns.get(p+":"+toWorld) != null) {
+						
 					}
 				}
 			}
@@ -34,12 +35,12 @@ public class WTListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerPortalEvent(PlayerPortalEvent e) {
 		String toWorld = e.getTo().getWorld().getName();
-		Player p = e.getPlayer();
-		if (!p.hasPermission("worldtimer.bypass")) {
-			if (WTUtil.checkIfInEnabledWorld(p.getWorld())) {
-				if (WTUtil.checkIfOnCooldown(p.getName(), p.getWorld())) {
-					String cooldownmsg = WTUtil.getConfig().getString("Worlds."+toWorld+".onCooldownMessage").replace("$cooldown", ""+((WTUtil.cooldowns.get(p.getName()+":"+toWorld) - System.currentTimeMillis()) / 1000 / 60));
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', cooldownmsg));
+		String p = e.getPlayer().getName();
+		if (!e.getPlayer().hasPermission("worldtimer.bypass")) {
+			if (WTUtil.checkIfInEnabledWorld(toWorld)) {
+				if (WTUtil.checkIfOnCooldown(p, toWorld)) {
+					String cooldownmsg = WTUtil.getConfig().getString("Worlds."+toWorld+".onCooldownMessage").replace("$cooldown", ""+((WTUtil.cooldowns.get(p+":"+toWorld) - System.currentTimeMillis()) / 1000 / 60));
+					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', cooldownmsg));
 					e.setCancelled(true);
 				}
 			}
@@ -52,7 +53,7 @@ public class WTListener implements Listener {
 		String p = player.getName();
 		String world = player.getWorld().getName();
 		if (!player.hasPermission("worldtimer.bypass")) {
-			if (WTUtil.checkIfInEnabledWorld(player.getWorld())) {
+			if (WTUtil.checkIfInEnabledWorld(world)) {
 				Long timestamp = WTUtil.timestamps.get(p+":"+world);
 				if (timestamp != null) {
 					WTUtil.data.put(p+":"+world, (System.currentTimeMillis() + timestamp));
@@ -82,13 +83,13 @@ public class WTListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		World world = p.getWorld();
+		String world = p.getWorld().getName();
 		if (!p.hasPermission("worldtimer.bypass")) {
 			WTUtil.loginTimestamp(p.getName());
 			if (WTUtil.checkIfInEnabledWorld(world)) {
-				if (WTUtil.data.get(p.getName()+":"+world.getName()) == null) {
-					WTUtil.data.put(p.getName()+":"+world.getName(), System.currentTimeMillis() + WTUtil.getConfig().getLong("Worlds."+world.getName()+".timer")*1000);
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', WTUtil.getConfig().getString("Worlds."+world.getName()+".timerAddedMessage")));
+				if (WTUtil.data.get(p.getName()+":"+world) == null) {
+					WTUtil.data.put(p.getName()+":"+world, System.currentTimeMillis() + WTUtil.getConfig().getLong("Worlds."+world+".timer")*1000);
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', WTUtil.getConfig().getString("Worlds."+world+".timerAddedMessage")));
 				}
 				WTUtil.inEnabledWorld.put(p.getName(), true);
 			} else {
