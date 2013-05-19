@@ -1,6 +1,6 @@
 name: WorldTimer
 main: org.fatecrafters.plugins.WorldTime
-version: 1.0
+version: 1.2
 author: Slayr288
 website: http://Fatecrafters.org
 description: Set time limits in a world.
